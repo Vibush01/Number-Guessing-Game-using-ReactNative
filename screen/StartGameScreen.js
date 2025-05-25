@@ -1,4 +1,4 @@
-import { TextInput, View, StyleSheet, Touchable } from "react-native";
+import { TextInput, View, StyleSheet } from "react-native";
 import PrimaryButton from "../components/PrimaryButton";
 
 function StartGameScreen() {
