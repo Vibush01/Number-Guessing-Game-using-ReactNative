@@ -1,9 +1,12 @@
-import { Text, View, StyleSheet, Alert } from "react-native";
-import { useState } from "react";
+import {  View, StyleSheet, Alert } from "react-native";
+import { useState, useEffect } from "react";
+import {Ionicons} from "@expo/vector-icons" 
 
 import Title from "../components/ui/Title";
 import NumContainer from "../components/game/NumContainer";
 import PrimaryButton from "../components/ui/PrimaryButton";
+import Card from "../components/ui/Card";
+import InstructionText from "../components/ui/InstructionText";
 
 function generateRandomBetween(min, max, exclude) {
   const rndNum = Math.floor(Math.random() * (max - min)) + min;
@@ -16,9 +19,18 @@ function generateRandomBetween(min, max, exclude) {
 }
 let minBoundary = 1;
 let maxBoundary = 100;
-function GameScreen({ userNumber }) {
-  const initialGuess = generateRandomBetween(minBoundary, maxBoundary, userNumber);
+
+
+function GameScreen({ userNumber, onGameOver }) {
+  const initialGuess = generateRandomBetween(1, 100, userNumber);
   const [curGuess, setCurGuess] = useState(initialGuess);
+
+  useEffect(()=>{
+    if(curGuess===userNumber){
+        onGameOver();
+    }
+
+  },[ curGuess, userNumber, onGameOver])
 
   function nextGuessNum(direction){
     if((direction === 'lower' && curGuess < userNumber) || (direction === 'greater' && curGuess > userNumber)){
@@ -38,14 +50,20 @@ function GameScreen({ userNumber }) {
     <View style={styles.screen}>
       <Title>Opponent's Guess</Title>
       <NumContainer>{curGuess}</NumContainer>
-      <View>
-        <Text>Higher or lower?</Text>
+      <Card>
+        <InstructionText style={styles.instructionText}>Higher or lower?</InstructionText>
         <View style={styles.buttonsContainer}>
-          <PrimaryButton onPress={nextGuessNum.bind(this, 'lower')}>-</PrimaryButton>
-          <PrimaryButton onPress={nextGuessNum.bind(this, 'greater')}>+</PrimaryButton>
+          <View style={styles.buttonContainer}>
+            <PrimaryButton onPress={nextGuessNum.bind(this, 'lower')}><Ionicons name="remove" size={24} color="white"/></PrimaryButton>
+          </View>
+          <View style={styles.buttonContainer}>
+            <PrimaryButton onPress={nextGuessNum.bind(this, 'greater')}><Ionicons name="add" size={24} color="white"/></PrimaryButton>
+          </View>  
+
+          
+
         </View>
-      </View>
-      <View></View>
+      </Card>
     </View>
   );
 }
@@ -58,5 +76,12 @@ const styles = StyleSheet.create({
   },
   buttonsContainer: {
     flexDirection: "row",
+    
   },
+  instructionText:{
+    marginBottom:24,
+  },
+  buttonContainer:{
+    flex:1
+  }
 });
