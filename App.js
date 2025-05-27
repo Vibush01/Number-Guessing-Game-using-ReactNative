@@ -14,7 +14,7 @@ export default function App() {
   let screen = <StartGameScreen onPickNum={pickedNum}/>;
 
   if(userNum){
-    screen= <GameScreen/>
+    screen= <GameScreen userNumber={userNum}/>
   }
   return (
     <LinearGradient
